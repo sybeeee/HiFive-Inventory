@@ -200,7 +200,11 @@ function restoreUser() {
   const session = readSession();
   if (!session) return null;
   const user = readUsers().find(item => item.username.toLowerCase() === String(session.username).toLowerCase());
-  return user ? {username:user.username,role:user.role} : null;
+  if (!user || (user.status && user.status !== 'Aktif')) {
+    clearSession();
+    return null;
+  }
+  return {username:user.username,role:user.role};
 }
 function updateProfileUI() {
   if (!currentUser) return;
@@ -242,6 +246,7 @@ $('loginForm').addEventListener('submit', async (event) => {
   if (!username || !password) return setAuthError('loginError','Username dan password wajib diisi.');
   const user = readUsers().find(item => item.username.toLowerCase() === username.toLowerCase());
   if (!user) return setAuthError('loginError','Akun tidak ditemukan. Periksa username atau buat akun baru.');
+  if (user.status && user.status !== 'Aktif') return setAuthError('loginError','Akun ini sedang Nonaktif. Hubungi Administrator.');
   const passwordHash = await hashPassword(password,user.salt);
   if (passwordHash !== user.passwordHash) return setAuthError('loginError','Password belum sesuai. Silakan coba lagi.');
   loginIntoApp(user, $('rememberMe').checked);
@@ -254,6 +259,7 @@ $('registerForm').addEventListener('submit', async (event) => {
   const password = $('registerPassword').value;
   const confirm = $('registerConfirm').value;
   if (username.length < 3) return setAuthError('registerError','Username minimal terdiri dari 3 karakter.');
+  if (!['gudang','kasir'].includes(role)) return setAuthError('registerError','Akun publik hanya dapat dibuat untuk role Gudang atau Kasir. Hubungi Admin untuk pengelolaan akses lainnya.');
   if (!/^[a-zA-Z0-9._-]+$/.test(username)) return setAuthError('registerError','Gunakan huruf, angka, titik, garis bawah, atau tanda hubung pada username.');
   if (password.length < 6) return setAuthError('registerError','Password minimal terdiri dari 6 karakter.');
   if (password !== confirm) return setAuthError('registerError','Konfirmasi password belum sama.');
@@ -399,6 +405,7 @@ function pageHeader(title,key,crumb,description) {
   return `<div class="ph"><div><div class="crumb">HIFIVE INVENTORY &nbsp;/&nbsp; ${escapeHTML(crumb || 'MENU')}</div><h1>${escapeHTML(title)}</h1><p>${escapeHTML(description || `Kelola dan pantau data ${title.toLowerCase()} secara terpusat.`)}</p></div><img src="${pageMascot(key)}" alt="Maskot HiFive"></div>`;
 }
 function genericPage(title,key) {
+  if (window.HiFiveCRUD && window.HiFiveCRUD.isMasterPage(key)) return window.HiFiveCRUD.renderPage(title,key);
   const data = getPageData(key,title);
   const metrics = data.t || ['Total Data','Aktif','Perlu Perhatian'];
   const values = data.v || [data.n || '5',data.n || '5','0'];
@@ -519,6 +526,7 @@ function renderRoute() {
   bindPageTools();
 }
 function bindPageTools() {
+  if (window.HiFiveCRUD && window.HiFiveCRUD.isMasterPage(currentPageKey)) { window.HiFiveCRUD.bind(); return; }
   const search = $('pageSearch');
   if (search) search.addEventListener('input', () => filterCurrentTable(search.value));
   const status = $('statusFilter');
@@ -580,6 +588,7 @@ function bindCashier() {
 }
 
 function openAddModal() {
+  if (window.HiFiveCRUD && window.HiFiveCRUD.isMasterPage(currentPageKey)) { window.HiFiveCRUD.openForm('create'); return; }
   const title = MENU_TITLES.get(currentPageKey) || 'Data';
   const data = getPageData(currentPageKey,title);
   const fields = data.c.filter(header => !['STATUS','AKSI'].includes(header)).slice(0,4);
@@ -590,11 +599,12 @@ function openAddModal() {
   $('recordForm').dataset.fieldCount = String(fields.length);
   $('recordField0')?.focus();
 }
-function closeModal() { $('modalBackdrop').classList.remove('open'); $('recordForm').reset(); }
+function closeModal() { $('modalBackdrop').classList.remove('open'); $('recordForm').reset(); $('modalBackdrop').querySelector('.modal-box')?.classList.remove('crud-modal'); $('modalFields').classList.remove('crud-fields'); $('recordForm').dataset.crudModule=''; $('recordForm').dataset.crudMode=''; $('recordForm').dataset.crudId=''; }
 $('cancelModal').addEventListener('click',closeModal);
 $('modalBackdrop').addEventListener('click',(event)=>{if(event.target === $('modalBackdrop'))closeModal();});
 $('recordForm').addEventListener('submit',(event)=>{
   event.preventDefault();
+  if (window.HiFiveCRUD && window.HiFiveCRUD.handleSubmit(event)) return;
   const title = MENU_TITLES.get(currentPageKey) || 'Data';
   const data = getPageData(currentPageKey,title);
   const count = Number($('recordForm').dataset.fieldCount || 0);
@@ -743,6 +753,7 @@ function setTodayDate() {
 }
 async function init() {
   await ensureDemoUsers();
+  if (window.HiFiveCRUD) window.HiFiveCRUD.init();
   setTodayDate();
   fillIcons(document);
   currentUser = restoreUser();
