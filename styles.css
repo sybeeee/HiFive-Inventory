@@ -353,8 +353,16 @@ header{height:76px;padding:0 30px;gap:18px;position:relative}
 .page-btn:hover:not(:disabled){background:#FBE8EF;border-color:#E9B7C9;color:var(--pinkd)}
 .page-btn:disabled{opacity:.35;cursor:not-allowed}
 .page-current{font-size:9px;color:var(--muted);min-width:40px;text-align:center}
-.crud-modal{width:min(720px,100%);max-height:min(88vh,820px);overflow:auto}
-.crud-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;max-height:58vh;overflow:auto;padding:2px 4px 4px 0}
+.crud-modal{width:min(760px,100%);max-height:min(92vh,900px);overflow-y:auto;overscroll-behavior:contain}
+/* Jangan membuat scroll bersarang di dalam modal. Seluruh field tetap terlihat,
+   dan bila layar pendek, pengguna cukup scroll pada modal utamanya. */
+.crud-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;max-height:none;overflow:visible;padding:2px 4px 4px 0}
+.crud-form-section{grid-column:1/-1;margin:0 0 16px;padding:0 0 8px;border-bottom:1px solid var(--line)}
+.crud-form-section:last-of-type{border-bottom:0;margin-bottom:0}
+.crud-section-heading{display:flex;flex-direction:column;gap:4px;margin:2px 0 12px}
+.crud-section-heading b{font-size:11px;color:var(--deep)}
+.crud-section-heading small{font-size:9px;color:var(--muted)}
+.crud-section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
 .crud-field{min-width:0}
 .crud-field.full,.crud-form-error,.crud-password-note{grid-column:1/-1}
 .crud-field label{display:block;font-size:10px;font-weight:650;color:var(--ink);margin:0 0 7px}
@@ -367,4 +375,4 @@ header{height:76px;padding:0 30px;gap:18px;position:relative}
 .crud-password-note{font-size:9px;color:var(--muted);background:var(--canvas);padding:10px 12px;border-radius:8px;margin:0 0 12px}
 .crud-pg{margin-top:16px}
 @media(max-width:900px){.crud-toolbar .btn{margin-left:0}.crud-search{max-width:none;flex-basis:100%}.crud-toolbar .sel{flex:1;min-width:130px}}
-@media(max-width:640px){.crud-fields{grid-template-columns:1fr;max-height:62vh}.crud-field.full,.crud-form-error,.crud-password-note{grid-column:auto}.crud-modal{padding:17px}.crud-toolbar .sel{width:100%}.crud-readonly-note{margin-left:0}}
+@media(max-width:640px){.crud-fields,.crud-section-grid{grid-template-columns:1fr}.crud-form-section,.crud-field.full,.crud-form-error,.crud-password-note{grid-column:1/-1}.crud-modal{padding:17px}.crud-toolbar .sel{width:100%}.crud-readonly-note{margin-left:0}}
