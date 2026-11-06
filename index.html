@@ -56,11 +56,10 @@
           <input class="in" id="registerUsername" name="username" placeholder="Contoh: ara.inventory" autocomplete="username" required minlength="3">
           <label for="registerRole">Role / Hak Akses</label>
           <select class="in" id="registerRole" name="role" required>
-            <option value="admin">Admin</option>
             <option value="gudang">Gudang</option>
             <option value="kasir">Kasir</option>
           </select>
-          <p class="role-hint">Role akan ditampilkan pada profil setelah berhasil login.</p>
+          <p class="role-hint">Akun publik hanya dapat dibuat untuk Gudang atau Kasir. Akses Admin dikelola oleh Administrator.</p>
           <div class="form-grid">
             <div>
               <label for="registerPassword">Password</label>
@@ -173,6 +172,7 @@
     </div>
   </div>
 
+  <script src="crud.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
