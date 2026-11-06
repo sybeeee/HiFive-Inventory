@@ -317,3 +317,54 @@ header{height:76px;padding:0 30px;gap:18px;position:relative}
 #side.collapsed .profile-dock{position:static}
 #side.collapsed .sidebar-bottom .profile-options{position:fixed;left:86px;bottom:68px;top:auto;width:190px;margin:0;z-index:90;}
 #side.collapsed .sidebar-bottom .profile-options button{font-size:10px;padding:9px 10px}
+
+
+/* MASTER DATA CRUD — mengikuti komponen dan palet HiFive */
+.crud-panel{min-height:560px}
+.crud-toolbar{align-items:center;gap:12px;margin:20px 0 16px;flex-wrap:wrap}
+.crud-search{max-width:330px;min-width:230px;flex:1 1 260px;height:40px}
+.crud-toolbar .sel{height:40px;min-width:145px}
+.crud-toolbar .btn{margin-left:auto;height:40px;white-space:nowrap}
+.crud-add-btn{background:var(--pink);color:#fff}
+.crud-add-btn:hover{background:var(--pinkd);color:#fff}
+.crud-table{min-width:800px}
+.crud-table th{white-space:nowrap;padding:13px 10px}
+.crud-table td{vertical-align:middle;padding:15px 10px;line-height:1.45}
+.crud-table tbody tr:hover{background:#FFFAFC}
+.code-text{color:var(--ink);font-size:10px;letter-spacing:.01em}
+.number-text{font-variant-numeric:tabular-nums;color:var(--ink)}
+.cell-sub{display:block;color:var(--muted);font-size:9px;margin-top:3px;font-weight:400}
+.user-name-cell{display:block;color:var(--ink);font-weight:600}
+.symbol-chip{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:5px 9px;border-radius:7px;background:#EAF6F3;color:var(--deep);font-weight:700;font-size:9px}
+.crud-actions{display:flex;align-items:center;gap:6px}
+.action-btn{width:30px;height:30px;border:1px solid #EDDDE5;border-radius:8px;background:#fff;color:#756B75;display:inline-grid;place-items:center;transition:.15s ease}
+.action-btn:hover{color:var(--pinkd);background:#FFF1F6;border-color:#EFC8D7}
+.action-btn.danger:hover{color:#BC3A55;background:#FFF0F2;border-color:#F2C5CF}
+.action-btn .i{width:14px;height:14px}
+.crud-key-icon{font-size:17px;line-height:1}
+.crud-readonly{font-size:9px;color:var(--muted)}
+.crud-readonly-note{margin-left:auto;color:var(--muted);font-size:10px}
+.crud-empty{text-align:center;padding:42px 15px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+.crud-empty>span{color:#C8AAB7}
+.crud-empty b{font-size:12px;color:var(--ink)}
+.crud-empty small{font-size:10px}
+.crud-pagination{display:flex;align-items:center;gap:10px}
+.page-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--deep);font-size:17px;line-height:1}
+.page-btn:hover:not(:disabled){background:#FBE8EF;border-color:#E9B7C9;color:var(--pinkd)}
+.page-btn:disabled{opacity:.35;cursor:not-allowed}
+.page-current{font-size:9px;color:var(--muted);min-width:40px;text-align:center}
+.crud-modal{width:min(720px,100%);max-height:min(88vh,820px);overflow:auto}
+.crud-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;max-height:58vh;overflow:auto;padding:2px 4px 4px 0}
+.crud-field{min-width:0}
+.crud-field.full,.crud-form-error,.crud-password-note{grid-column:1/-1}
+.crud-field label{display:block;font-size:10px;font-weight:650;color:var(--ink);margin:0 0 7px}
+.crud-field label em{font-style:normal;color:var(--pinkd)}
+.crud-input,.crud-field select.in,.crud-field textarea.in{width:100%;height:42px;margin:0 0 15px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:11px;outline:none}
+.crud-field textarea.in{height:auto;min-height:72px;padding:10px 12px;resize:vertical}
+.crud-input:focus{border-color:var(--pink);box-shadow:0 0 0 3px #D88FA81F}
+.crud-form-error{display:none;background:#FFF0F2;border:1px solid #F2CBD4;color:#A43B55;border-radius:9px;padding:9px 11px;font-size:10px;margin:0 0 14px}
+.crud-form-error.show{display:block}
+.crud-password-note{font-size:9px;color:var(--muted);background:var(--canvas);padding:10px 12px;border-radius:8px;margin:0 0 12px}
+.crud-pg{margin-top:16px}
+@media(max-width:900px){.crud-toolbar .btn{margin-left:0}.crud-search{max-width:none;flex-basis:100%}.crud-toolbar .sel{flex:1;min-width:130px}}
+@media(max-width:640px){.crud-fields{grid-template-columns:1fr;max-height:62vh}.crud-field.full,.crud-form-error,.crud-password-note{grid-column:auto}.crud-modal{padding:17px}.crud-toolbar .sel{width:100%}.crud-readonly-note{margin-left:0}}
