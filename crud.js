@@ -52,11 +52,15 @@
         { name: 'name', label: 'Nama Barang', required: true, placeholder: 'Masukkan nama barang' },
         { name: 'categoryId', label: 'Kategori', type: 'select', required: true, options: 'categories' },
         { name: 'unitId', label: 'Satuan', type: 'select', required: true, options: 'units' },
-        { name: 'supplierId', label: 'Supplier', type: 'select', required: true, options: 'suppliers' },
-        { name: 'purchasePrice', label: 'Harga Beli (Rp)', type: 'number', required: true, min: '0', step: '1' },
-        { name: 'salePrice', label: 'Harga Jual (Rp)', type: 'number', required: true, min: '0', step: '1' },
-        { name: 'stock', label: 'Stok Saat Ini', type: 'number', required: true, min: '0', step: '0.01' },
-        { name: 'minStock', label: 'Batas Minimum Stok', type: 'number', required: true, min: '0', step: '0.01' }
+        { name: 'supplierId', label: 'Supplier', type: 'select', required: true, options: 'suppliers', full: true },
+        { name: 'purchasePrice', label: 'Harga Beli (Rp)', type: 'number', required: true, min: '0', step: '1', placeholder: 'Contoh: 2500' },
+        { name: 'salePrice', label: 'Harga Jual (Rp)', type: 'number', required: true, min: '0', step: '1', placeholder: 'Contoh: 3000' },
+        { name: 'stock', label: 'Stok Saat Ini', type: 'number', required: true, min: '0', step: '0.01', placeholder: 'Masukkan jumlah stok' },
+        { name: 'minStock', label: 'Batas Minimum Stok', type: 'number', required: true, min: '0', step: '0.01', placeholder: 'Contoh: 10' }
+      ],
+      formSections: [
+        { title: 'Informasi Barang', description: 'Identitas dan hubungan barang dengan master data.', fields: ['code','name','categoryId','unitId','supplierId'] },
+        { title: 'Harga & Persediaan', description: 'Harga beli, harga jual, stok saat ini, dan batas minimum.', fields: ['purchasePrice','salePrice','stock','minStock'] }
       ]
     },
     kategori: {
@@ -345,8 +349,12 @@
     $('modalTitle').textContent = mode === 'edit' ? `Edit ${config.title}` : config.add;
     $('modalDescription').textContent = mode === 'edit' ? 'Perbarui informasi pada formulir berikut, lalu simpan perubahan.' : `Lengkapi formulir berikut untuk menambahkan ${config.title.toLowerCase()} baru.`;
     const fields = config.fields.filter(field => !(key === 'pengguna' && mode === 'edit' && field.name === 'password'));
+    const fieldByName = Object.fromEntries(fields.map(field => [field.name, field]));
+    const formContent = config.formSections
+      ? config.formSections.map(section => `<section class="crud-form-section"><div class="crud-section-heading"><b>${escape(section.title)}</b><small>${escape(section.description || '')}</small></div><div class="crud-section-grid">${section.fields.map(name => fieldByName[name]).filter(Boolean).map(field => makeField(field,record,mode)).join('')}</div></section>`).join('')
+      : fields.map(field => makeField(field,record,mode)).join('');
     $('modalFields').classList.add('crud-fields');
-    $('modalFields').innerHTML = `<div class="crud-form-error" id="crudFormError" role="alert"></div>${fields.map(field=>makeField(field,record,mode)).join('')}${key==='pengguna'&&mode==='edit'?'<div class="crud-password-note full">Gunakan tombol Reset Password pada tabel untuk mengganti kata sandi pengguna.</div>':''}`;
+    $('modalFields').innerHTML = `<div class="crud-form-error" id="crudFormError" role="alert"></div>${formContent}${key==='pengguna'&&mode==='edit'?'<div class="crud-password-note full">Gunakan tombol Reset Password pada tabel untuk mengganti kata sandi pengguna.</div>':''}`;
     $('recordForm').dataset.crudModule = key;
     $('recordForm').dataset.crudMode = mode;
     $('recordForm').dataset.crudId = record?.id || record?.username || '';
